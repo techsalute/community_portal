@@ -646,7 +646,7 @@
             <!-- Add Leader Form -->
             <div id="addLeaderForm" class="add-leader-form">
                 <h3><i class="fas fa-user-plus"></i> Add New Community Leader</h3>
-                <form id="leaderForm" onsubmit="event.preventDefault(); addNewLeader();">
+                <form id="leaderForm" onsubmit="event.preventDefault(); submitLeaderForm();">
                     <div class="form-grid">
                         <div class="form-group">
                             <label for="leaderName">Full Name *</label>
@@ -693,12 +693,13 @@
                             <label for="leaderOrder">Display Order</label>
                             <input type="number" id="leaderOrder" value="999" min="1">
                         </div>
+                        <input type="hidden" id="editingLeaderId" value="">
                     </div>
                     <div class="form-actions">
                         <button type="button" class="btn btn-secondary" onclick="toggleAddLeaderForm()">
                             <i class="fas fa-times"></i> Cancel
                         </button>
-                        <button type="submit" class="btn btn-success">
+                        <button type="submit" id="leaderFormSubmitBtn" class="btn btn-success">
                             <i class="fas fa-save"></i> Save Leader
                         </button>
                     </div>
@@ -949,6 +950,9 @@
         // DISPLAY LEADERS (PUBLIC VIEW)
         // ====================================================
         function displayLeaders(leaders) {
+            // Cache leaders for admin operations (edit/delete)
+            window.leadersCache = leaders || [];
+
             const container = document.getElementById('leadersContainer');
             
             if (!leaders || leaders.length === 0) {
@@ -998,6 +1002,17 @@
                 
                 html += `
                     <div class="leader-card">
+                        ${isAdmin ? `
+                            <div style="position: absolute; top: 12px; right: 12px; display: flex; gap: 8px; z-index: 2;">
+                                <button class="btn btn-outline" title="Edit" onclick="startEditLeader(${index})">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-danger" title="Delete" onclick="deleteLeader(${index})">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        ` : ''}
+                        
                         <div class="leader-header">
                             ${avatarHtml}
                             <div class="leader-info">
@@ -1158,6 +1173,147 @@
         }
 
         // ====================================================
+        // ADMIN: Edit / Update / Delete Functions
+        // ====================================================
+        function startEditLeader(index) {
+            if (!isAdmin) {
+                showStatus('Please login as admin first', 'error');
+                showLoginForm();
+                return;
+            }
+
+            const leader = (window.leadersCache && window.leadersCache[index]) || null;
+            if (!leader) {
+                showStatus('Leader not found', 'error');
+                return;
+            }
+
+            // Populate form
+            document.getElementById('leaderName').value = leader.name || '';
+            document.getElementById('leaderRole').value = leader.role || '';
+            document.getElementById('leaderResponsibilities').value = leader.responsibilities || '';
+            document.getElementById('leaderEmail').value = leader.email || '';
+            document.getElementById('leaderPhone').value = leader.phone || '';
+            document.getElementById('leaderImage').value = leader.imageurl || '';
+            document.getElementById('leaderIcon').value = leader.iconclass || 'fa-user';
+            document.getElementById('leaderOrder').value = leader.order || '999';
+
+            // Save editing id (prefer explicit id fields if present)
+            const id = leader.id || leader._id || leader.rowid || index;
+            document.getElementById('editingLeaderId').value = id;
+
+            // Switch button label to Update
+            const submitBtn = document.getElementById('leaderFormSubmitBtn');
+            if (submitBtn) submitBtn.innerHTML = '<i class="fas fa-save"></i> Update Leader';
+
+            // Show form
+            document.getElementById('addLeaderForm').style.display = 'block';
+            document.getElementById('adminDashboard').style.display = 'block';
+            setTimeout(() => document.getElementById('leaderName').focus(), 100);
+        }
+
+        async function submitLeaderForm() {
+            const editingId = document.getElementById('editingLeaderId').value;
+            if (editingId && editingId.toString().trim() !== '') {
+                await updateLeader(editingId);
+            } else {
+                await addNewLeader();
+            }
+        }
+
+        async function updateLeader(id) {
+            if (!isAdmin) {
+                showStatus('Please login as admin first', 'error');
+                return;
+            }
+
+            const leaderData = {
+                id: id,
+                name: document.getElementById('leaderName').value,
+                role: document.getElementById('leaderRole').value,
+                responsibilities: document.getElementById('leaderResponsibilities').value,
+                email: document.getElementById('leaderEmail').value,
+                phone: document.getElementById('leaderPhone').value,
+                imageurl: document.getElementById('leaderImage').value,
+                iconclass: document.getElementById('leaderIcon').value,
+                order: document.getElementById('leaderOrder').value,
+                token: 'admin_token'
+            };
+
+            if (!leaderData.name || !leaderData.role || !leaderData.responsibilities) {
+                showStatus('Please fill all required fields (Name, Role, Responsibilities)', 'error');
+                return;
+            }
+
+            showLoading(true);
+            try {
+                const params = new URLSearchParams();
+                Object.keys(leaderData).forEach(k => params.append(k, leaderData[k]));
+
+                const response = await fetch(`${SCRIPT_URL}?action=updateLeader&${params.toString()}`);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    // Reset form
+                    document.getElementById('leaderForm').reset();
+                    document.getElementById('leaderOrder').value = '999';
+                    document.getElementById('leaderIcon').value = 'fa-user';
+                    document.getElementById('editingLeaderId').value = '';
+                    const submitBtn = document.getElementById('leaderFormSubmitBtn');
+                    if (submitBtn) submitBtn.innerHTML = '<i class="fas fa-save"></i> Save Leader';
+
+                    document.getElementById('addLeaderForm').style.display = 'none';
+
+                    showStatus('Leader updated successfully', 'success');
+                    setTimeout(() => loadLeaders(), 800);
+                } else {
+                    showStatus('Failed to update leader: ' + (data.error || 'Unknown error'), 'error');
+                }
+            } catch (err) {
+                console.error('Update leader error:', err);
+                showStatus('Error updating leader: ' + err.message, 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        async function deleteLeader(index) {
+            if (!isAdmin) {
+                showStatus('Please login as admin first', 'error');
+                return;
+            }
+
+            const leader = (window.leadersCache && window.leadersCache[index]) || null;
+            if (!leader) {
+                showStatus('Leader not found', 'error');
+                return;
+            }
+
+            const id = leader.id || leader._id || leader.rowid || index;
+            if (!confirm('Are you sure you want to delete ' + (leader.name || 'this leader') + '?')) return;
+
+            showLoading(true);
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=deleteLeader&id=${encodeURIComponent(id)}&token=admin_token`);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    showStatus('Leader deleted successfully', 'success');
+                    setTimeout(() => loadLeaders(), 800);
+                } else {
+                    showStatus('Failed to delete leader: ' + (data.error || 'Unknown error'), 'error');
+                }
+            } catch (err) {
+                console.error('Delete leader error:', err);
+                showStatus('Error deleting leader: ' + err.message, 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // ====================================================
         // PUBLIC ACCESS FUNCTIONS
         // ====================================================
         // These functions are available to all users
@@ -1171,6 +1327,9 @@
         // Admin-only functions
         window.addNewLeader = addNewLeader;
         window.toggleAddLeaderForm = toggleAddLeaderForm;
+        window.startEditLeader = startEditLeader;
+        window.deleteLeader = deleteLeader;
+        window.submitLeaderForm = submitLeaderForm;
     </script>
 </body>
 </html>
