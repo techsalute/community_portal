@@ -29,11 +29,19 @@
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
         .header h1 {
             font-size: 1.8rem;
             margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 0.9rem;
+            opacity: 0.9;
         }
 
         .header-actions {
@@ -47,6 +55,32 @@
             max-width: 1400px;
             margin: 0 auto;
             padding: 2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1517502884422-41eaead166d4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            border-radius: 12px;
+            margin-bottom: 3rem;
+        }
+
+        .hero h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            opacity: 0.9;
         }
 
         /* Loading */
@@ -108,7 +142,8 @@
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
             max-width: 450px;
-            margin: 3rem auto;
+            margin: 2rem auto;
+            display: none;
         }
 
         .login-section h2 {
@@ -209,6 +244,17 @@
             transform: translateY(-2px);
         }
 
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #1e5799;
+            color: #1e5799;
+        }
+
+        .btn-outline:hover {
+            background: #1e5799;
+            color: white;
+        }
+
         /* Admin Dashboard */
         .admin-dashboard {
             background: white;
@@ -216,6 +262,7 @@
             padding: 2rem;
             margin-bottom: 2rem;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            display: none;
         }
 
         .dashboard-header {
@@ -267,6 +314,7 @@
             border-radius: 12px;
             margin-top: 2rem;
             border: 2px dashed #d1e3ff;
+            display: none;
         }
 
         .add-leader-form h3 {
@@ -363,6 +411,7 @@
             font-size: 2rem;
             color: #1e5799;
             flex-shrink: 0;
+            overflow: hidden;
         }
 
         .leader-avatar img {
@@ -407,7 +456,6 @@
             padding: 0.5rem 1rem;
             border-radius: 20px;
             font-size: 0.9rem;
-            margin-left: 1rem;
         }
 
         .server-online {
@@ -420,6 +468,21 @@
             color: #721c24;
         }
 
+        /* Welcome Message for Public Users */
+        .welcome-message {
+            text-align: center;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+        }
+
+        .welcome-message h2 {
+            color: #1e5799;
+            margin-bottom: 1rem;
+        }
+
         /* Footer */
         .footer {
             background: #1a1a2e;
@@ -427,30 +490,6 @@
             padding: 2rem;
             text-align: center;
             margin-top: 4rem;
-        }
-
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            width: 90%;
-            max-width: 500px;
-            max-height: 90vh;
-            overflow-y: auto;
         }
 
         /* Responsive */
@@ -463,6 +502,7 @@
             
             .header-actions {
                 justify-content: center;
+                flex-wrap: wrap;
             }
             
             .leaders-grid {
@@ -482,6 +522,14 @@
                 gap: 1rem;
                 align-items: flex-start;
             }
+            
+            .hero {
+                padding: 2rem 1rem;
+            }
+            
+            .hero h2 {
+                font-size: 1.8rem;
+            }
         }
     </style>
 </head>
@@ -496,28 +544,40 @@
             <div id="serverStatus" class="server-status server-online" style="display: none;">
                 <i class="fas fa-circle"></i> <span id="serverStatusText">Checking...</span>
             </div>
+            <button id="loginBtn" class="btn btn-outline" onclick="showLoginForm()">
+                <i class="fas fa-user-shield"></i> Admin Login
+            </button>
             <button id="logoutBtn" class="btn btn-danger" onclick="logout()" style="display: none;">
                 <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+            <button id="adminPanelBtn" class="btn btn-primary" onclick="showAdminPanel()" style="display: none;">
+                <i class="fas fa-tachometer-alt"></i> Admin Panel
             </button>
         </div>
     </div>
 
     <!-- Main Container -->
     <div class="container">
+        <!-- Hero Section -->
+        <div class="hero">
+            <h2>Welcome to Our Community Portal</h2>
+            <p>Meet the dedicated leaders who work tirelessly for the betterment of our community. Browse through their profiles to learn about their roles and contributions.</p>
+        </div>
+
         <!-- Status Message -->
         <div id="statusMessage" class="status"></div>
 
         <!-- Loading -->
         <div id="loading" class="loading">
             <div class="spinner"></div>
-            <p>Loading community portal...</p>
+            <p>Loading community leaders...</p>
         </div>
 
         <!-- Error Message -->
         <div id="errorMessage" class="error" style="display: none;"></div>
 
         <!-- Login Section -->
-        <div id="loginSection" class="login-section" style="display: none;">
+        <div id="loginSection" class="login-section">
             <h2><i class="fas fa-user-shield"></i> Admin Login</h2>
             <div class="form-group">
                 <label for="email">Email Address</label>
@@ -527,9 +587,14 @@
                 <label for="password">Password</label>
                 <input type="password" id="password" value="admin@2026">
             </div>
-            <button class="btn btn-primary" onclick="login()" style="width: 100%;">
-                <i class="fas fa-sign-in-alt"></i> Login to Admin Dashboard
-            </button>
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" onclick="hideLoginForm()">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button class="btn btn-primary" onclick="login()">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+            </div>
             <div style="margin-top: 1.5rem; padding: 1rem; background: #f8f9fa; border-radius: 6px;">
                 <p style="color: #666; font-size: 0.9rem; margin-bottom: 0.5rem;">
                     <strong><i class="fas fa-info-circle"></i> Default Credentials:</strong>
@@ -539,113 +604,119 @@
             </div>
         </div>
 
+        <!-- Welcome Message for Public Users -->
+        <div id="welcomeMessage" class="welcome-message" style="display: none;">
+            <h2><i class="fas fa-users"></i> Community Leaders Directory</h2>
+            <p>Below are the dedicated individuals who serve our community. Click on any leader to view their details.</p>
+            <p style="margin-top: 1rem; color: #666;">
+                <i class="fas fa-info-circle"></i> Admins can login to manage leaders.
+            </p>
+        </div>
+
         <!-- Admin Dashboard -->
-        <div id="adminDashboard" style="display: none;">
-            <!-- Dashboard Header -->
-            <div class="admin-dashboard">
-                <div class="dashboard-header">
-                    <h2><i class="fas fa-tachometer-alt"></i> Admin Dashboard</h2>
-                    <div style="display: flex; gap: 1rem;">
-                        <button class="btn btn-primary" onclick="toggleAddLeaderForm()">
-                            <i class="fas fa-plus"></i> Add New Leader
-                        </button>
-                        <button class="btn btn-secondary" onclick="loadLeaders()">
-                            <i class="fas fa-sync-alt"></i> Refresh
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Dashboard Stats -->
-                <div class="dashboard-stats">
-                    <div class="stat-card">
-                        <h3 id="totalLeaders">0</h3>
-                        <p>Total Leaders</p>
-                    </div>
-                    <div class="stat-card">
-                        <h3 id="activeLeaders">0</h3>
-                        <p>Active Leaders</p>
-                    </div>
-                    <div class="stat-card">
-                        <h3>1</h3>
-                        <p>Admin Users</p>
-                    </div>
-                </div>
-
-                <!-- Add Leader Form -->
-                <div id="addLeaderForm" class="add-leader-form" style="display: none;">
-                    <h3><i class="fas fa-user-plus"></i> Add New Community Leader</h3>
-                    <form id="leaderForm" onsubmit="event.preventDefault(); addNewLeader();">
-                        <div class="form-grid">
-                            <div class="form-group">
-                                <label for="leaderName">Full Name *</label>
-                                <input type="text" id="leaderName" required placeholder="Enter leader's full name">
-                            </div>
-                            <div class="form-group">
-                                <label for="leaderRole">Role/Position *</label>
-                                <input type="text" id="leaderRole" required placeholder="e.g., Community Head">
-                            </div>
-                            <div class="form-group">
-                                <label for="leaderResponsibilities">Responsibilities *</label>
-                                <textarea id="leaderResponsibilities" required placeholder="Describe responsibilities..."></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label for="leaderEmail">Email Address</label>
-                                <input type="email" id="leaderEmail" placeholder="leader@community.com">
-                            </div>
-                            <div class="form-group">
-                                <label for="leaderPhone">Phone Number</label>
-                                <input type="tel" id="leaderPhone" placeholder="+91 98765 43210">
-                            </div>
-                            <div class="form-group">
-                                <label for="leaderImage">Profile Image URL</label>
-                                <input type="url" id="leaderImage" placeholder="https://example.com/photo.jpg">
-                                <small style="color: #666; margin-top: 0.3rem; display: block;">
-                                    Leave empty to use default icon
-                                </small>
-                            </div>
-                            <div class="form-group">
-                                <label for="leaderIcon">Profile Icon</label>
-                                <select id="leaderIcon">
-                                    <option value="fa-user">👤 User</option>
-                                    <option value="fa-user-tie">👔 Executive</option>
-                                    <option value="fa-users">👥 Team</option>
-                                    <option value="fa-hands-helping">🤝 Support</option>
-                                    <option value="fa-graduation-cap">🎓 Education</option>
-                                    <option value="fa-heartbeat">❤️ Health</option>
-                                    <option value="fa-female">♀️ Women</option>
-                                    <option value="fa-child">👶 Youth</option>
-                                    <option value="fa-landmark">🏛️ Culture</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="leaderOrder">Display Order</label>
-                                <input type="number" id="leaderOrder" value="999" min="1">
-                            </div>
-                        </div>
-                        <div class="form-actions">
-                            <button type="button" class="btn btn-secondary" onclick="toggleAddLeaderForm()">
-                                <i class="fas fa-times"></i> Cancel
-                            </button>
-                            <button type="submit" class="btn btn-success">
-                                <i class="fas fa-save"></i> Save Leader
-                            </button>
-                        </div>
-                    </form>
+        <div id="adminDashboard" class="admin-dashboard">
+            <div class="dashboard-header">
+                <h2><i class="fas fa-tachometer-alt"></i> Admin Dashboard</h2>
+                <div style="display: flex; gap: 1rem;">
+                    <button class="btn btn-primary" onclick="toggleAddLeaderForm()">
+                        <i class="fas fa-plus"></i> Add New Leader
+                    </button>
+                    <button class="btn btn-secondary" onclick="loadLeaders()">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
                 </div>
             </div>
 
-            <!-- Leaders Section -->
-            <div class="leaders-section">
-                <div class="section-header">
-                    <h2><i class="fas fa-users"></i> Community Leaders</h2>
-                    <span style="color: #666; font-size: 0.95rem;">
-                        Showing <span id="displayCount">0</span> leaders
-                    </span>
+            <!-- Dashboard Stats -->
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <h3 id="totalLeaders">0</h3>
+                    <p>Total Leaders</p>
                 </div>
+                <div class="stat-card">
+                    <h3 id="activeLeaders">0</h3>
+                    <p>Active Leaders</p>
+                </div>
+                <div class="stat-card">
+                    <h3>1</h3>
+                    <p>Admin Users</p>
+                </div>
+            </div>
 
-                <div id="leadersContainer" class="leaders-grid">
-                    <!-- Leaders will be loaded here -->
-                </div>
+            <!-- Add Leader Form -->
+            <div id="addLeaderForm" class="add-leader-form">
+                <h3><i class="fas fa-user-plus"></i> Add New Community Leader</h3>
+                <form id="leaderForm" onsubmit="event.preventDefault(); addNewLeader();">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="leaderName">Full Name *</label>
+                            <input type="text" id="leaderName" required placeholder="Enter leader's full name">
+                        </div>
+                        <div class="form-group">
+                            <label for="leaderRole">Role/Position *</label>
+                            <input type="text" id="leaderRole" required placeholder="e.g., Community Head">
+                        </div>
+                        <div class="form-group">
+                            <label for="leaderResponsibilities">Responsibilities *</label>
+                            <textarea id="leaderResponsibilities" required placeholder="Describe responsibilities..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="leaderEmail">Email Address</label>
+                            <input type="email" id="leaderEmail" placeholder="leader@community.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="leaderPhone">Phone Number</label>
+                            <input type="tel" id="leaderPhone" placeholder="+91 98765 43210">
+                        </div>
+                        <div class="form-group">
+                            <label for="leaderImage">Profile Image URL</label>
+                            <input type="url" id="leaderImage" placeholder="https://example.com/photo.jpg">
+                            <small style="color: #666; margin-top: 0.3rem; display: block;">
+                                Leave empty to use default icon
+                            </small>
+                        </div>
+                        <div class="form-group">
+                            <label for="leaderIcon">Profile Icon</label>
+                            <select id="leaderIcon">
+                                <option value="fa-user">👤 User</option>
+                                <option value="fa-user-tie">👔 Executive</option>
+                                <option value="fa-users">👥 Team</option>
+                                <option value="fa-hands-helping">🤝 Support</option>
+                                <option value="fa-graduation-cap">🎓 Education</option>
+                                <option value="fa-heartbeat">❤️ Health</option>
+                                <option value="fa-female">♀️ Women</option>
+                                <option value="fa-child">👶 Youth</option>
+                                <option value="fa-landmark">🏛️ Culture</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="leaderOrder">Display Order</label>
+                            <input type="number" id="leaderOrder" value="999" min="1">
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="toggleAddLeaderForm()">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save"></i> Save Leader
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Leaders Section (ALWAYS VISIBLE to all users) -->
+        <div class="leaders-section">
+            <div class="section-header">
+                <h2><i class="fas fa-users"></i> Community Leaders</h2>
+                <span style="color: #666; font-size: 0.95rem;">
+                    Showing <span id="displayCount">0</span> leaders
+                </span>
+            </div>
+
+            <div id="leadersContainer" class="leaders-grid">
+                <!-- Leaders will be loaded here -->
             </div>
         </div>
     </div>
@@ -654,7 +725,7 @@
     <div class="footer">
         <p>&copy; 2023 RAJA MAANIKKAM TEACHERS STREET, SHENBAKKAM. All rights reserved.</p>
         <p style="margin-top: 0.5rem; color: #aaa; font-size: 0.9rem;">
-            Community Portal v2.0 | Powered by Google Sheets
+            Community Portal v2.0 | All users can view leaders. Admin login required for management.
         </p>
     </div>
 
@@ -681,12 +752,18 @@
             if (savedToken && savedAdmin === 'true') {
                 adminToken = savedToken;
                 isAdmin = true;
+                updateAdminUI(true);
+            } else {
+                updateAdminUI(false);
             }
+            
+            // Show welcome message for public users
+            document.getElementById('welcomeMessage').style.display = 'block';
             
             // Check server connection
             checkServerConnection();
             
-            // Load leaders
+            // Load leaders (ALWAYS LOAD FOR ALL USERS)
             loadLeaders();
         });
 
@@ -707,7 +784,6 @@
                         statusText.textContent = 'Server Online';
                         statusElement.className = 'server-status server-online';
                         statusElement.style.display = 'inline-flex';
-                        showStatus('Connected to server', 'success');
                         return true;
                     }
                 }
@@ -720,13 +796,20 @@
             statusText.textContent = 'Server Offline';
             statusElement.className = 'server-status server-offline';
             statusElement.style.display = 'inline-flex';
-            showStatus('Server connection issue. Some features may not work.', 'error');
             return false;
         }
 
         // ====================================================
-        // LOGIN / LOGOUT
+        // LOGIN / LOGOUT FUNCTIONS
         // ====================================================
+        function showLoginForm() {
+            document.getElementById('loginSection').style.display = 'block';
+        }
+
+        function hideLoginForm() {
+            document.getElementById('loginSection').style.display = 'none';
+        }
+
         async function login() {
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
@@ -756,13 +839,12 @@
                     localStorage.setItem('isAdmin', 'true');
                     
                     // Update UI
-                    document.getElementById('loginSection').style.display = 'none';
-                    document.getElementById('adminDashboard').style.display = 'block';
-                    document.getElementById('logoutBtn').style.display = 'inline-flex';
+                    updateAdminUI(true);
+                    hideLoginForm();
                     
                     showStatus('Login successful! Welcome Administrator', 'success');
                     
-                    // Reload leaders
+                    // Reload leaders (still public view)
                     loadLeaders();
                 } else {
                     showStatus('Login failed: ' + (data.error || 'Invalid credentials'), 'error');
@@ -786,20 +868,45 @@
                 localStorage.removeItem('isAdmin');
                 
                 // Update UI
-                document.getElementById('adminDashboard').style.display = 'none';
-                document.getElementById('loginSection').style.display = 'block';
-                document.getElementById('logoutBtn').style.display = 'none';
-                document.getElementById('addLeaderForm').style.display = 'none';
+                updateAdminUI(false);
                 
                 showStatus('Logged out successfully', 'success');
                 
-                // Reload leaders (non-admin view)
+                // Hide admin panel if visible
+                document.getElementById('adminDashboard').style.display = 'none';
+                document.getElementById('addLeaderForm').style.display = 'none';
+                
+                // Reload leaders (still public view)
                 loadLeaders();
             }
         }
 
+        function updateAdminUI(isLoggedIn) {
+            if (isLoggedIn) {
+                document.getElementById('loginBtn').style.display = 'none';
+                document.getElementById('logoutBtn').style.display = 'inline-flex';
+                document.getElementById('adminPanelBtn').style.display = 'inline-flex';
+            } else {
+                document.getElementById('loginBtn').style.display = 'inline-flex';
+                document.getElementById('logoutBtn').style.display = 'none';
+                document.getElementById('adminPanelBtn').style.display = 'none';
+                document.getElementById('adminDashboard').style.display = 'none';
+                document.getElementById('addLeaderForm').style.display = 'none';
+            }
+        }
+
+        function showAdminPanel() {
+            if (isAdmin) {
+                document.getElementById('adminDashboard').style.display = 'block';
+                document.getElementById('addLeaderForm').style.display = 'none';
+            } else {
+                showStatus('Please login as admin first', 'error');
+                showLoginForm();
+            }
+        }
+
         // ====================================================
-        // LOAD LEADERS
+        // LOAD LEADERS (PUBLIC - NO LOGIN REQUIRED)
         // ====================================================
         async function loadLeaders() {
             showLoading(true);
@@ -817,31 +924,17 @@
                 if (data.success) {
                     displayLeaders(data.leaders);
                     
-                    // Update stats
+                    // Update stats (only visible to admin)
                     const totalLeaders = data.leaders.length;
                     document.getElementById('totalLeaders').textContent = totalLeaders;
                     document.getElementById('activeLeaders').textContent = totalLeaders;
                     document.getElementById('displayCount').textContent = totalLeaders;
-                    
-                    // Show appropriate sections
-                    if (isAdmin) {
-                        document.getElementById('adminDashboard').style.display = 'block';
-                        document.getElementById('loginSection').style.display = 'none';
-                    } else {
-                        document.getElementById('adminDashboard').style.display = 'none';
-                        document.getElementById('loginSection').style.display = 'block';
-                    }
                     
                     if (totalLeaders > 0) {
                         showStatus(`Loaded ${totalLeaders} community leaders`, 'success');
                     }
                 } else {
                     showError(data.error || 'Failed to load leaders');
-                    
-                    // If sheet doesn't exist, show setup option for admin
-                    if (data.error && data.error.includes('not found') && isAdmin) {
-                        showStatus('Leaders sheet not found. Please add your first leader.', 'error');
-                    }
                 }
                 
             } catch (error) {
@@ -853,7 +946,7 @@
         }
 
         // ====================================================
-        // DISPLAY LEADERS
+        // DISPLAY LEADERS (PUBLIC VIEW)
         // ====================================================
         function displayLeaders(leaders) {
             const container = document.getElementById('leadersContainer');
@@ -870,7 +963,11 @@
                             <button class="btn btn-primary" onclick="toggleAddLeaderForm()">
                                 <i class="fas fa-plus"></i> Add First Leader
                             </button>
-                        ` : ''}
+                        ` : `
+                            <p style="color: #999; font-size: 0.9rem;">
+                                <i class="fas fa-info-circle"></i> Community leaders will be listed here once added by administrators.
+                            </p>
+                        `}
                     </div>
                 `;
                 return;
@@ -937,12 +1034,12 @@
         }
 
         // ====================================================
-        // ADD NEW LEADER
+        // ADD NEW LEADER (ADMIN ONLY)
         // ====================================================
         async function addNewLeader() {
             if (!isAdmin) {
                 showStatus('Please login as admin first', 'error');
-                login();
+                showLoginForm();
                 return;
             }
             
@@ -997,7 +1094,7 @@
                     // Show success message
                     showStatus(`Success! ${data.leader.name} has been added as ${data.leader.role}`, 'success');
                     
-                    // Reload leaders
+                    // Reload leaders (public view updates for all users)
                     setTimeout(() => {
                         loadLeaders();
                     }, 1000);
@@ -1045,6 +1142,7 @@
         function toggleAddLeaderForm() {
             if (!isAdmin) {
                 showStatus('Please login as admin first', 'error');
+                showLoginForm();
                 return;
             }
             
@@ -1060,44 +1158,19 @@
         }
 
         // ====================================================
-        // TEST FUNCTIONS
+        // PUBLIC ACCESS FUNCTIONS
         // ====================================================
-        async function testAddLeader() {
-            // Test data
-            const testLeader = {
-                name: 'Test Leader',
-                role: 'Test Coordinator',
-                responsibilities: 'Testing the system functionality',
-                email: 'test@community.com',
-                phone: '9876543210',
-                imageurl: '',
-                iconclass: 'fa-user',
-                order: '999',
-                isactive: true,
-                token: 'admin_token'
-            };
-            
-            const params = new URLSearchParams();
-            Object.keys(testLeader).forEach(key => {
-                params.append(key, testLeader[key]);
-            });
-            
-            try {
-                const response = await fetch(`${SCRIPT_URL}?action=addLeader&${params.toString()}`);
-                const data = await response.json();
-                alert('Test Result: ' + JSON.stringify(data, null, 2));
-            } catch (error) {
-                alert('Test Error: ' + error.message);
-            }
-        }
-
-        // Make functions available globally
+        // These functions are available to all users
         window.login = login;
         window.logout = logout;
         window.loadLeaders = loadLeaders;
+        window.showLoginForm = showLoginForm;
+        window.hideLoginForm = hideLoginForm;
+        window.showAdminPanel = showAdminPanel;
+        
+        // Admin-only functions
         window.addNewLeader = addNewLeader;
         window.toggleAddLeaderForm = toggleAddLeaderForm;
-        window.testAddLeader = testAddLeader;
     </script>
 </body>
 </html>
