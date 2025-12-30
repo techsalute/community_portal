@@ -23,19 +23,28 @@
         .header {
             background: linear-gradient(135deg, #1e5799 0%, #207cca 100%);
             color: white;
-            padding: 2rem;
-            text-align: center;
+            padding: 1.5rem 2rem;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
         }
 
         .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
         }
 
         /* Main Content */
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 2rem;
         }
@@ -72,136 +81,11 @@
             border-left: 4px solid #d32f2f;
         }
 
-        /* Leaders Grid */
-        .leaders-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        /* Leader Card */
-        .leader-card {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .leader-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-        }
-
-        .leader-image {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            margin: 0 auto 1rem;
-            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
-            color: #1e5799;
-        }
-
-        .leader-name {
-            color: #1e5799;
-            font-size: 1.3rem;
-            margin-bottom: 0.5rem;
-            text-align: center;
-        }
-
-        .leader-role {
-            color: #666;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            text-align: center;
-        }
-
-        .leader-details {
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px solid #eee;
-        }
-
-        .leader-details p {
-            margin-bottom: 0.5rem;
-            font-size: 0.95rem;
-        }
-
-        .leader-details strong {
-            color: #555;
-        }
-
-        /* Login Section */
-        .login-section {
-            background: white;
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            max-width: 400px;
-            margin: 2rem auto;
-        }
-
-        .login-section h2 {
-            color: #1e5799;
-            margin-bottom: 1.5rem;
-            text-align: center;
-        }
-
-        .form-group {
-            margin-bottom: 1.2rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #555;
-            font-weight: 600;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 0.8rem;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 1rem;
-            transition: border-color 0.3s;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: #1e5799;
-            box-shadow: 0 0 0 3px rgba(30, 87, 153, 0.1);
-        }
-
-        .btn {
-            background: linear-gradient(to right, #1e5799, #207cca);
-            color: white;
-            border: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            width: 100%;
-        }
-
-        .btn:hover {
-            background: linear-gradient(to right, #16467e, #1a6ab3);
-            transform: translateY(-2px);
-        }
-
         /* Status Message */
         .status {
             padding: 1rem;
-            border-radius: 6px;
+            border-radius: 8px;
             margin: 1rem 0;
-            text-align: center;
             display: none;
         }
 
@@ -217,6 +101,304 @@
             border: 1px solid #f5c6cb;
         }
 
+        /* Login Section */
+        .login-section {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            max-width: 450px;
+            margin: 3rem auto;
+        }
+
+        .login-section h2 {
+            color: #1e5799;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #555;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #1e5799;
+            box-shadow: 0 0 0 3px rgba(30, 87, 153, 0.1);
+        }
+
+        /* Button Styles */
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, #1e5799, #207cca);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(to right, #16467e, #1a6ab3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(30, 87, 153, 0.2);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+
+        /* Admin Dashboard */
+        .admin-dashboard {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .dashboard-header h2 {
+            color: #1e5799;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: #f8fafe;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            border-left: 4px solid #1e5799;
+        }
+
+        .stat-card h3 {
+            color: #1e5799;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Add Leader Form */
+        .add-leader-form {
+            background: #f8fafe;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-top: 2rem;
+            border: 2px dashed #d1e3ff;
+        }
+
+        .add-leader-form h3 {
+            color: #1e5799;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
+        }
+
+        /* Leaders Section */
+        .leaders-section {
+            margin-top: 3rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .section-header h2 {
+            color: #1e5799;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        /* Leaders Grid */
+        .leaders-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        /* Leader Card */
+        .leader-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .leader-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .leader-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(to right, #1e5799, #207cca);
+        }
+
+        .leader-header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .leader-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: #1e5799;
+            flex-shrink: 0;
+        }
+
+        .leader-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .leader-info h3 {
+            color: #1e5799;
+            font-size: 1.3rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .leader-info .role {
+            color: #666;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .leader-details {
+            margin-top: 1rem;
+        }
+
+        .detail-item {
+            margin-bottom: 0.8rem;
+            font-size: 0.95rem;
+        }
+
+        .detail-item strong {
+            color: #555;
+            display: block;
+            margin-bottom: 0.2rem;
+        }
+
         /* Server Status */
         .server-status {
             display: inline-flex;
@@ -225,16 +407,16 @@
             padding: 0.5rem 1rem;
             border-radius: 20px;
             font-size: 0.9rem;
-            margin-top: 1rem;
+            margin-left: 1rem;
         }
 
         .server-online {
-            background: #d4edda;
+            background: rgba(212, 237, 218, 0.9);
             color: #155724;
         }
 
         .server-offline {
-            background: #f8d7da;
+            background: rgba(248, 215, 218, 0.9);
             color: #721c24;
         }
 
@@ -244,101 +426,245 @@
             color: white;
             padding: 2rem;
             text-align: center;
-            margin-top: 3rem;
+            margin-top: 4rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         /* Responsive */
         @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2rem;
+            .header {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+            
+            .header-actions {
+                justify-content: center;
             }
             
             .leaders-grid {
                 grid-template-columns: 1fr;
             }
             
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
             .container {
                 padding: 1rem;
+            }
+            
+            .dashboard-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Header -->
     <div class="header">
-        <h1>RAJA MAANIKKAM TEACHERS STREET, SHENBAKKAM</h1>
-        <p>Community Management Portal</p>
-        <div id="serverStatus" class="server-status server-online" style="display: none;">
-            <i class="fas fa-circle"></i> <span id="serverStatusText">Checking...</span>
+        <div>
+            <h1>RAJA MAANIKKAM TEACHERS STREET, SHENBAKKAM</h1>
+            <p>Community Management Portal</p>
+        </div>
+        <div class="header-actions">
+            <div id="serverStatus" class="server-status server-online" style="display: none;">
+                <i class="fas fa-circle"></i> <span id="serverStatusText">Checking...</span>
+            </div>
+            <button id="logoutBtn" class="btn btn-danger" onclick="logout()" style="display: none;">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
         </div>
     </div>
 
+    <!-- Main Container -->
     <div class="container">
-        <!-- Status Messages -->
+        <!-- Status Message -->
         <div id="statusMessage" class="status"></div>
-        
+
         <!-- Loading -->
         <div id="loading" class="loading">
             <div class="spinner"></div>
-            <p>Loading community leaders...</p>
+            <p>Loading community portal...</p>
         </div>
 
-        <!-- Error -->
+        <!-- Error Message -->
         <div id="errorMessage" class="error" style="display: none;"></div>
 
-        <!-- Login Section (initially hidden) -->
+        <!-- Login Section -->
         <div id="loginSection" class="login-section" style="display: none;">
             <h2><i class="fas fa-user-shield"></i> Admin Login</h2>
             <div class="form-group">
-                <label for="email">Email</label>
+                <label for="email">Email Address</label>
                 <input type="email" id="email" value="admin@community.com">
             </div>
             <div class="form-group">
                 <label for="password">Password</label>
                 <input type="password" id="password" value="admin@2026">
             </div>
-            <button class="btn" onclick="login()">
-                <i class="fas fa-sign-in-alt"></i> Login
+            <button class="btn btn-primary" onclick="login()" style="width: 100%;">
+                <i class="fas fa-sign-in-alt"></i> Login to Admin Dashboard
             </button>
-            <p style="margin-top: 1rem; color: #666; font-size: 0.9rem;">
-                <strong>Default:</strong> admin@community.com / admin@2026
-            </p>
+            <div style="margin-top: 1.5rem; padding: 1rem; background: #f8f9fa; border-radius: 6px;">
+                <p style="color: #666; font-size: 0.9rem; margin-bottom: 0.5rem;">
+                    <strong><i class="fas fa-info-circle"></i> Default Credentials:</strong>
+                </p>
+                <p style="color: #666; font-size: 0.9rem; margin-bottom: 0.3rem;">Email: admin@community.com</p>
+                <p style="color: #666; font-size: 0.9rem;">Password: admin@2026</p>
+            </div>
         </div>
 
-        <!-- Admin Panel (initially hidden) -->
-        <div id="adminPanel" style="display: none;">
-            <h2 style="color: #1e5799; margin-bottom: 1rem;">
-                <i class="fas fa-tachometer-alt"></i> Admin Dashboard
-            </h2>
-            <button class="btn" onclick="loadLeaders()" style="margin-bottom: 1rem;">
-                <i class="fas fa-sync-alt"></i> Refresh Leaders
-            </button>
-        </div>
+        <!-- Admin Dashboard -->
+        <div id="adminDashboard" style="display: none;">
+            <!-- Dashboard Header -->
+            <div class="admin-dashboard">
+                <div class="dashboard-header">
+                    <h2><i class="fas fa-tachometer-alt"></i> Admin Dashboard</h2>
+                    <div style="display: flex; gap: 1rem;">
+                        <button class="btn btn-primary" onclick="toggleAddLeaderForm()">
+                            <i class="fas fa-plus"></i> Add New Leader
+                        </button>
+                        <button class="btn btn-secondary" onclick="loadLeaders()">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                    </div>
+                </div>
 
-        <!-- Leaders Section -->
-        <div id="leadersSection" style="display: none;">
-            <h2 style="color: #1e5799; margin-bottom: 2rem; text-align: center;">
-                <i class="fas fa-users"></i> Community Leaders
-                <small style="display: block; font-size: 1rem; color: #666; margin-top: 0.5rem;">
-                    <span id="leaderCount">0</span> active leaders
-                </small>
-            </h2>
-            
-            <div id="leadersContainer" class="leaders-grid">
-                <!-- Leaders will be loaded here -->
+                <!-- Dashboard Stats -->
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <h3 id="totalLeaders">0</h3>
+                        <p>Total Leaders</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="activeLeaders">0</h3>
+                        <p>Active Leaders</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>1</h3>
+                        <p>Admin Users</p>
+                    </div>
+                </div>
+
+                <!-- Add Leader Form -->
+                <div id="addLeaderForm" class="add-leader-form" style="display: none;">
+                    <h3><i class="fas fa-user-plus"></i> Add New Community Leader</h3>
+                    <form id="leaderForm" onsubmit="event.preventDefault(); addNewLeader();">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="leaderName">Full Name *</label>
+                                <input type="text" id="leaderName" required placeholder="Enter leader's full name">
+                            </div>
+                            <div class="form-group">
+                                <label for="leaderRole">Role/Position *</label>
+                                <input type="text" id="leaderRole" required placeholder="e.g., Community Head">
+                            </div>
+                            <div class="form-group">
+                                <label for="leaderResponsibilities">Responsibilities *</label>
+                                <textarea id="leaderResponsibilities" required placeholder="Describe responsibilities..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="leaderEmail">Email Address</label>
+                                <input type="email" id="leaderEmail" placeholder="leader@community.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="leaderPhone">Phone Number</label>
+                                <input type="tel" id="leaderPhone" placeholder="+91 98765 43210">
+                            </div>
+                            <div class="form-group">
+                                <label for="leaderImage">Profile Image URL</label>
+                                <input type="url" id="leaderImage" placeholder="https://example.com/photo.jpg">
+                                <small style="color: #666; margin-top: 0.3rem; display: block;">
+                                    Leave empty to use default icon
+                                </small>
+                            </div>
+                            <div class="form-group">
+                                <label for="leaderIcon">Profile Icon</label>
+                                <select id="leaderIcon">
+                                    <option value="fa-user">👤 User</option>
+                                    <option value="fa-user-tie">👔 Executive</option>
+                                    <option value="fa-users">👥 Team</option>
+                                    <option value="fa-hands-helping">🤝 Support</option>
+                                    <option value="fa-graduation-cap">🎓 Education</option>
+                                    <option value="fa-heartbeat">❤️ Health</option>
+                                    <option value="fa-female">♀️ Women</option>
+                                    <option value="fa-child">👶 Youth</option>
+                                    <option value="fa-landmark">🏛️ Culture</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="leaderOrder">Display Order</label>
+                                <input type="number" id="leaderOrder" value="999" min="1">
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="toggleAddLeaderForm()">
+                                <i class="fas fa-times"></i> Cancel
+                            </button>
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-save"></i> Save Leader
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Leaders Section -->
+            <div class="leaders-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-users"></i> Community Leaders</h2>
+                    <span style="color: #666; font-size: 0.95rem;">
+                        Showing <span id="displayCount">0</span> leaders
+                    </span>
+                </div>
+
+                <div id="leadersContainer" class="leaders-grid">
+                    <!-- Leaders will be loaded here -->
+                </div>
             </div>
         </div>
     </div>
 
+    <!-- Footer -->
     <div class="footer">
         <p>&copy; 2023 RAJA MAANIKKAM TEACHERS STREET, SHENBAKKAM. All rights reserved.</p>
+        <p style="margin-top: 0.5rem; color: #aaa; font-size: 0.9rem;">
+            Community Portal v2.0 | Powered by Google Sheets
+        </p>
     </div>
 
     <script>
         // ====================================================
         // CONFIGURATION
         // ====================================================
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwUh3h_RkID7E2V5CbXk78pW0tK8NrMU28bMrU0PlFdk-XIkWJ6bYR9NVusNjboaR3q/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzpYAA_FC-Y6tjEJxOtqS6ENnpZg4jgdNHoQ60lEd1SHkLgmrdQEpPXPuL3_zoz3HfY/exec';
         
+        let adminToken = null;
         let isAdmin = false;
         let serverOnline = false;
 
@@ -346,12 +672,21 @@
         // INITIALIZE PAGE
         // ====================================================
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('Page loaded. Starting initialization...');
+            console.log('Community Portal Initializing...');
             
-            // First, check server connection
+            // Check if user was previously logged in
+            const savedToken = localStorage.getItem('adminToken');
+            const savedAdmin = localStorage.getItem('isAdmin');
+            
+            if (savedToken && savedAdmin === 'true') {
+                adminToken = savedToken;
+                isAdmin = true;
+            }
+            
+            // Check server connection
             checkServerConnection();
             
-            // Then load leaders
+            // Load leaders
             loadLeaders();
         });
 
@@ -363,7 +698,6 @@
             const statusText = document.getElementById('serverStatusText');
             
             try {
-                // Use fetch with no-cors mode for testing
                 const response = await fetch(`${SCRIPT_URL}?action=ping&timestamp=${Date.now()}`);
                 
                 if (response.ok) {
@@ -373,7 +707,7 @@
                         statusText.textContent = 'Server Online';
                         statusElement.className = 'server-status server-online';
                         statusElement.style.display = 'inline-flex';
-                        showStatus('Server connection established', 'success');
+                        showStatus('Connected to server', 'success');
                         return true;
                     }
                 }
@@ -386,110 +720,12 @@
             statusText.textContent = 'Server Offline';
             statusElement.className = 'server-status server-offline';
             statusElement.style.display = 'inline-flex';
-            showStatus('Warning: Server connection issue. Some features may not work.', 'error');
+            showStatus('Server connection issue. Some features may not work.', 'error');
             return false;
         }
 
         // ====================================================
-        // LOAD LEADERS
-        // ====================================================
-        async function loadLeaders() {
-            showLoading(true);
-            hideError();
-            
-            try {
-                // If server is offline, try to check again
-                if (!serverOnline) {
-                    await checkServerConnection();
-                }
-                
-                // Load leaders from Google Script
-                const response = await fetch(`${SCRIPT_URL}?action=getLeaders&timestamp=${Date.now()}`);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    displayLeaders(data.leaders);
-                    document.getElementById('leaderCount').textContent = data.count || data.leaders.length;
-                    showStatus(`Loaded ${data.count || data.leaders.length} leaders successfully`, 'success');
-                } else {
-                    showError(data.error || 'Failed to load leaders');
-                }
-                
-            } catch (error) {
-                console.error('Error loading leaders:', error);
-                showError('Error loading leaders: ' + error.message);
-            } finally {
-                showLoading(false);
-            }
-        }
-
-        // ====================================================
-        // DISPLAY LEADERS
-        // ====================================================
-        function displayLeaders(leaders) {
-            const container = document.getElementById('leadersContainer');
-            const leadersSection = document.getElementById('leadersSection');
-            
-            if (!leaders || leaders.length === 0) {
-                container.innerHTML = `
-                    <div style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
-                        <div class="leader-image">
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <h3 class="leader-name">No Leaders Found</h3>
-                        <p>No community leaders are currently listed.</p>
-                    </div>
-                `;
-                leadersSection.style.display = 'block';
-                return;
-            }
-            
-            let html = '';
-            
-            leaders.forEach(leader => {
-                const icon = leader.iconclass || 'fa-user';
-                const imageUrl = leader.imageurl || '';
-                
-                let imageHtml = '';
-                if (imageUrl && imageUrl.trim() !== '') {
-                    imageHtml = `<img src="${imageUrl}" alt="${leader.name}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
-                } else {
-                    imageHtml = `<i class="fas ${icon}"></i>`;
-                }
-                
-                html += `
-                    <div class="leader-card">
-                        <div class="leader-image">
-                            ${imageHtml}
-                        </div>
-                        <h3 class="leader-name">${leader.name || 'Unnamed Leader'}</h3>
-                        <div class="leader-role">${leader.role || 'No Role Specified'}</div>
-                        
-                        <div class="leader-details">
-                            <p><strong>Responsibilities:</strong> ${leader.responsibilities || 'Not specified'}</p>
-                            ${leader.email ? `<p><strong>Email:</strong> ${leader.email}</p>` : ''}
-                            ${leader.phone ? `<p><strong>Phone:</strong> ${leader.phone}</p>` : ''}
-                        </div>
-                    </div>
-                `;
-            });
-            
-            container.innerHTML = html;
-            leadersSection.style.display = 'block';
-            
-            // Show login section for non-admin users
-            if (!isAdmin) {
-                document.getElementById('loginSection').style.display = 'block';
-            }
-        }
-
-        // ====================================================
-        // LOGIN FUNCTION
+        // LOGIN / LOGOUT
         // ====================================================
         async function login() {
             const email = document.getElementById('email').value;
@@ -513,11 +749,18 @@
                 
                 if (data.success) {
                     isAdmin = true;
-                    showStatus('Login successful! Welcome ' + data.user.name, 'success');
+                    adminToken = data.token || 'admin_token';
                     
-                    // Hide login section, show admin panel
+                    // Save login state
+                    localStorage.setItem('adminToken', adminToken);
+                    localStorage.setItem('isAdmin', 'true');
+                    
+                    // Update UI
                     document.getElementById('loginSection').style.display = 'none';
-                    document.getElementById('adminPanel').style.display = 'block';
+                    document.getElementById('adminDashboard').style.display = 'block';
+                    document.getElementById('logoutBtn').style.display = 'inline-flex';
+                    
+                    showStatus('Login successful! Welcome Administrator', 'success');
                     
                     // Reload leaders
                     loadLeaders();
@@ -528,6 +771,243 @@
             } catch (error) {
                 showStatus('Login error: ' + error.message, 'error');
                 console.error('Login error:', error);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                isAdmin = false;
+                adminToken = null;
+                
+                // Clear saved state
+                localStorage.removeItem('adminToken');
+                localStorage.removeItem('isAdmin');
+                
+                // Update UI
+                document.getElementById('adminDashboard').style.display = 'none';
+                document.getElementById('loginSection').style.display = 'block';
+                document.getElementById('logoutBtn').style.display = 'none';
+                document.getElementById('addLeaderForm').style.display = 'none';
+                
+                showStatus('Logged out successfully', 'success');
+                
+                // Reload leaders (non-admin view)
+                loadLeaders();
+            }
+        }
+
+        // ====================================================
+        // LOAD LEADERS
+        // ====================================================
+        async function loadLeaders() {
+            showLoading(true);
+            hideError();
+            
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=getLeaders&timestamp=${Date.now()}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayLeaders(data.leaders);
+                    
+                    // Update stats
+                    const totalLeaders = data.leaders.length;
+                    document.getElementById('totalLeaders').textContent = totalLeaders;
+                    document.getElementById('activeLeaders').textContent = totalLeaders;
+                    document.getElementById('displayCount').textContent = totalLeaders;
+                    
+                    // Show appropriate sections
+                    if (isAdmin) {
+                        document.getElementById('adminDashboard').style.display = 'block';
+                        document.getElementById('loginSection').style.display = 'none';
+                    } else {
+                        document.getElementById('adminDashboard').style.display = 'none';
+                        document.getElementById('loginSection').style.display = 'block';
+                    }
+                    
+                    if (totalLeaders > 0) {
+                        showStatus(`Loaded ${totalLeaders} community leaders`, 'success');
+                    }
+                } else {
+                    showError(data.error || 'Failed to load leaders');
+                    
+                    // If sheet doesn't exist, show setup option for admin
+                    if (data.error && data.error.includes('not found') && isAdmin) {
+                        showStatus('Leaders sheet not found. Please add your first leader.', 'error');
+                    }
+                }
+                
+            } catch (error) {
+                console.error('Error loading leaders:', error);
+                showError('Error loading leaders: ' + error.message);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // ====================================================
+        // DISPLAY LEADERS
+        // ====================================================
+        function displayLeaders(leaders) {
+            const container = document.getElementById('leadersContainer');
+            
+            if (!leaders || leaders.length === 0) {
+                container.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+                        <div style="font-size: 4rem; color: #e0e0e0; margin-bottom: 1rem;">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3 style="color: #666; margin-bottom: 1rem;">No Community Leaders Found</h3>
+                        <p style="color: #888; margin-bottom: 2rem;">No leaders are currently listed in the community directory.</p>
+                        ${isAdmin ? `
+                            <button class="btn btn-primary" onclick="toggleAddLeaderForm()">
+                                <i class="fas fa-plus"></i> Add First Leader
+                            </button>
+                        ` : ''}
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '';
+            
+            leaders.forEach((leader, index) => {
+                const icon = leader.iconclass || 'fa-user';
+                const imageUrl = leader.imageurl || '';
+                const email = leader.email || '';
+                const phone = leader.phone || '';
+                
+                let avatarHtml = '';
+                if (imageUrl && imageUrl.trim() !== '' && imageUrl !== 'null') {
+                    avatarHtml = `
+                        <div class="leader-avatar">
+                            <img src="${imageUrl}" alt="${leader.name}" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\\'fas ${icon}\\'></i>';">
+                        </div>
+                    `;
+                } else {
+                    avatarHtml = `
+                        <div class="leader-avatar">
+                            <i class="fas ${icon}"></i>
+                        </div>
+                    `;
+                }
+                
+                html += `
+                    <div class="leader-card">
+                        <div class="leader-header">
+                            ${avatarHtml}
+                            <div class="leader-info">
+                                <h3>${leader.name || 'Community Leader'}</h3>
+                                <div class="role">${leader.role || 'Community Member'}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="leader-details">
+                            <div class="detail-item">
+                                <strong>Responsibilities:</strong>
+                                ${leader.responsibilities || 'Not specified'}
+                            </div>
+                            ${email ? `
+                                <div class="detail-item">
+                                    <strong>Email:</strong>
+                                    <a href="mailto:${email}" style="color: #1e5799; text-decoration: none;">
+                                        ${email}
+                                    </a>
+                                </div>
+                            ` : ''}
+                            ${phone ? `
+                                <div class="detail-item">
+                                    <strong>Phone:</strong>
+                                    ${phone}
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        // ====================================================
+        // ADD NEW LEADER
+        // ====================================================
+        async function addNewLeader() {
+            if (!isAdmin) {
+                showStatus('Please login as admin first', 'error');
+                login();
+                return;
+            }
+            
+            // Get form values
+            const leaderData = {
+                name: document.getElementById('leaderName').value,
+                role: document.getElementById('leaderRole').value,
+                responsibilities: document.getElementById('leaderResponsibilities').value,
+                email: document.getElementById('leaderEmail').value,
+                phone: document.getElementById('leaderPhone').value,
+                imageurl: document.getElementById('leaderImage').value,
+                iconclass: document.getElementById('leaderIcon').value,
+                order: document.getElementById('leaderOrder').value,
+                isactive: true,
+                token: 'admin_token' // Simple auth for demo
+            };
+            
+            // Validate required fields
+            if (!leaderData.name || !leaderData.role || !leaderData.responsibilities) {
+                showStatus('Please fill all required fields (Name, Role, Responsibilities)', 'error');
+                return;
+            }
+            
+            showLoading(true);
+            
+            try {
+                // Build query string
+                const params = new URLSearchParams();
+                Object.keys(leaderData).forEach(key => {
+                    if (leaderData[key] !== undefined && leaderData[key] !== null) {
+                        params.append(key, leaderData[key]);
+                    }
+                });
+                
+                const response = await fetch(`${SCRIPT_URL}?action=addLeader&${params.toString()}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Reset form
+                    document.getElementById('leaderForm').reset();
+                    document.getElementById('leaderOrder').value = '999';
+                    document.getElementById('leaderIcon').value = 'fa-user';
+                    
+                    // Hide form
+                    document.getElementById('addLeaderForm').style.display = 'none';
+                    
+                    // Show success message
+                    showStatus(`Success! ${data.leader.name} has been added as ${data.leader.role}`, 'success');
+                    
+                    // Reload leaders
+                    setTimeout(() => {
+                        loadLeaders();
+                    }, 1000);
+                } else {
+                    showStatus('Failed to add leader: ' + (data.error || 'Unknown error'), 'error');
+                }
+                
+            } catch (error) {
+                showStatus('Error adding leader: ' + error.message, 'error');
+                console.error('Add leader error:', error);
             } finally {
                 showLoading(false);
             }
@@ -562,29 +1042,62 @@
             }, 5000);
         }
 
-        // ====================================================
-        // MANUAL TEST FUNCTION
-        // ====================================================
-        async function testConnection() {
-            showLoading(true);
+        function toggleAddLeaderForm() {
+            if (!isAdmin) {
+                showStatus('Please login as admin first', 'error');
+                return;
+            }
             
-            try {
-                const response = await fetch(`${SCRIPT_URL}?action=test`);
-                const data = await response.json();
-                
-                alert('Server Response: ' + JSON.stringify(data, null, 2));
-                
-            } catch (error) {
-                alert('Test failed: ' + error.message);
-            } finally {
-                showLoading(false);
+            const form = document.getElementById('addLeaderForm');
+            form.style.display = form.style.display === 'none' || form.style.display === '' ? 'block' : 'none';
+            
+            // Focus on first field when showing
+            if (form.style.display === 'block') {
+                setTimeout(() => {
+                    document.getElementById('leaderName').focus();
+                }, 100);
             }
         }
 
-        // Make test function available globally
-        window.testConnection = testConnection;
-        window.loadLeaders = loadLeaders;
+        // ====================================================
+        // TEST FUNCTIONS
+        // ====================================================
+        async function testAddLeader() {
+            // Test data
+            const testLeader = {
+                name: 'Test Leader',
+                role: 'Test Coordinator',
+                responsibilities: 'Testing the system functionality',
+                email: 'test@community.com',
+                phone: '9876543210',
+                imageurl: '',
+                iconclass: 'fa-user',
+                order: '999',
+                isactive: true,
+                token: 'admin_token'
+            };
+            
+            const params = new URLSearchParams();
+            Object.keys(testLeader).forEach(key => {
+                params.append(key, testLeader[key]);
+            });
+            
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=addLeader&${params.toString()}`);
+                const data = await response.json();
+                alert('Test Result: ' + JSON.stringify(data, null, 2));
+            } catch (error) {
+                alert('Test Error: ' + error.message);
+            }
+        }
+
+        // Make functions available globally
         window.login = login;
+        window.logout = logout;
+        window.loadLeaders = loadLeaders;
+        window.addNewLeader = addNewLeader;
+        window.toggleAddLeaderForm = toggleAddLeaderForm;
+        window.testAddLeader = testAddLeader;
     </script>
 </body>
 </html>
