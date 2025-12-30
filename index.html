@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Community Management Portal</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            }
+
+            body {
+                background-color: #f8f9fa;
+                color: #333;
+                line-height: 1.6;
+            }
+
+            /* Navigation */
+            nav {
+                background: linear-gradient(135deg, #1e5799 0%, #207cca 100%);
+                color: white;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                position: sticky;
+                top: 0;
+                z-index: 1000;
+            }
+
+            .header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 1.2rem 5%;
+                max-width: 1400px;
+                margin: 0 auto;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+                font-weight: 700;
+            }
+
+            .header ul {
+                display: flex;
+                list-style: none;
+                gap: 1.5rem;
+                align-items: center;
+            }
+
+            .header ul li a {
+                color: white;
+                text-decoration: none;
+                font-weight: 600;
+                font-size: 0.95rem;
+                padding: 0.5rem 1rem;
+                border-radius: 4px;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .header ul li a:hover {
+                background-color: rgba(255, 255, 255, 0.2);
+                transform: translateY(-2px);
+            }
+
+            .admin-badge {
+                background: #28a745;
+                color: white;
+                padding: 0.3rem 0.8rem;
+                border-radius: 20px;
+                font-size: 0.8rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .logout-btn {
+                background: #dc3545;
+                color: white;
+                border: none;
+                padding: 0.5rem 1rem;
+                border-radius: 4px;
+                cursor: pointer;
+                font-weight: 600;
+                transition: all 0.3s ease;
+            }
+
+            .logout-btn:hover {
+                background: #c82333;
+                transform: translateY(-2px);
+            }
+
+            /* Hero Section */
+            .hero {
+                background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                            url('https://images.unsplash.com/photo-1517502884422-41eaead166d4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80');
+                background-size: cover;
+                background-position: center;
+                height: 60vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                color: white;
+                padding: 2rem;
+                margin-bottom: 3rem;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+                font-weight: 800;
+                text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+                max-width: 800px;
+                line-height: 1.2;
+            }
+
+            /* Loading State */
+            .loading {
+                text-align: center;
+                padding: 3rem;
+                color: #1e5799;
+                font-size: 1.2rem;
+            }
+
+            .spinner {
+                border: 4px solid #f3f3f3;
+                border-top: 4px solid #1e5799;
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                animation: spin 1s linear infinite;
+                margin: 0 auto 1rem;
+            }
+
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+
+            /* Error Message */
+            .error-message {
+                background: #f8d7da;
+                color: #721c24;
+                padding: 1rem;
+                border-radius: 8px;
+                margin: 1rem auto;
+                max-width: 800px;
+                text-align: center;
+                border: 1px solid #f5c6cb;
+            }
+
+            .error-message button {
+                background: #dc3545;
+                color: white;
+                border: none;
+                padding: 0.5rem 1rem;
+                border-radius: 4px;
+                margin-top: 0.5rem;
+                cursor: pointer;
+            }
+
+            /* Login Modal */
+            .login-modal {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                z-index: 2000;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .login-content {
+                background: white;
+                padding: 2.5rem;
+                border-radius: 15px;
+                width: 90%;
+                max-width: 450px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+                position: relative;
+                animation: slideIn 0.3s ease;
+            }
+
+            @keyframes slideIn {
+                from { transform: translateY(-50px); opacity: 0; }
+                to { transform: translateY(0); opacity: 1; }
+            }
+
+            .close-modal {
+                position: absolute;
+                top: 1rem;
+                right: 1.5rem;
+                font-size: 1.5rem;
+                cursor: pointer;
+                color: #666;
+                transition: color 0.3s;
+            }
+
+            .close-modal:hover {
+                color: #333;
+            }
+
+            .login-content h2 {
+                color: #1e5799;
+                margin-bottom: 1.5rem;
+                text-align: center;
+                font-size: 1.8rem;
+            }
+
+            .login-form input {
+                width: 100%;
+                padding: 0.8rem 1rem;
+                margin-bottom: 1rem;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                font-size: 1rem;
+                transition: border-color 0.3s;
+            }
+
+            .login-form input:focus {
+                outline: none;
+                border-color: #1e5799;
+                box-shadow: 0 0 0 3px rgba(30, 87, 153, 0.1);
+            }
+
+            .login-btn {
+                width: 100%;
+                padding: 0.8rem;
+                background: linear-gradient(to right, #1e5799, #207cca);
+                color: white;
+                border: none;
+                border-radius: 8px;
+                font-size: 1rem;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s;
+                margin-top: 0.5rem;
+            }
+
+            .login-btn:hover {
+                background: linear-gradient(to right, #16467e, #1a6ab3);
+                transform: translateY(-2px);
+            }
+
+            .login-error {
+                color: #dc3545;
+                text-align: center;
+                margin-top: 1rem;
+                font-size: 0.9rem;
+                display: none;
+            }
+
+            /* Default Credentials */
+            .default-creds {
+                background: #f8f9fa;
+                padding: 1rem;
+                border-radius: 8px;
+                margin-top: 1.5rem;
+                font-size: 0.9rem;
+                color: #666;
+                border-left: 4px solid #1e5799;
+            }
+
+            .default-creds strong {
+                color: #1e5799;
+            }
+
+            /* Admin Panel */
+            .admin-panel {
+                max-width: 1400px;
+                margin: 2rem auto;
+                padding: 2rem;
+                background: white;
+                border-radius: 15px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+                display: none;
+            }
+
+            .admin-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 2rem;
+                padding-bottom: 1rem;
+                border-bottom: 2px solid #f0f0f0;
+            }
+
+            .admin-header h2 {
+                color: #1e5799;
+                display: flex;
+                align-items: center;
+                gap: 0.8rem;
+            }
+
+            .admin-controls {
+                display: flex;
+                gap: 1rem;
+            }
+
+            .toggle-form-btn, .refresh-btn {
+                padding: 0.6rem 1.2rem;
+                border: none;
+                border-radius: 6px;
+                cursor: pointer;
+                font-weight: 600;
+                transition: all 0.3s;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .toggle-form-btn {
+                background: #28a745;
+                color: white;
+            }
+
+            .toggle-form-btn:hover {
+                background: #218838;
+                transform: translateY(-2px);
+            }
+
+            .refresh-btn {
+                background: #17a2b8;
+                color: white;
+            }
+
+            .refresh-btn:hover {
+                background: #138496;
+                transform: translateY(-2px);
+            }
+
+            /* Leaders Section */
+            .leaders-section-heading {
+                text-align: center;
+                margin: 2rem auto 3rem;
+                color: #1e5799;
+                font-size: 2.5rem;
+                position: relative;
+                padding-bottom: 1rem;
+                max-width: 1400px;
+            }
+
+            .leaders-section-heading::after {
+                content: '';
+                position: absolute;
+                width: 100px;
+                height: 4px;
+                background: linear-gradient(to right, #1e5799, #207cca);
+                bottom: 0;
+                left: 50%;
+                transform: translateX(-50%);
+                border-radius: 2px;
+            }
+
+            .leaders {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+                gap: 2.5rem;
+                max-width: 1400px;
+                margin: 0 auto 5rem;
+                padding: 0 2rem;
+            }
+
+            .leader-card {
+                background: white;
+                border-radius: 16px;
+                overflow: hidden;
+                box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+                transition: all 0.3s ease;
+                text-align: center;
+                padding: 1.8rem 1.2rem;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                height: 100%;
+            }
+
+            .leader-card:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+            }
+
+            /* Circular Profile Images */
+            .leader-img-container {
+                width: 150px;
+                height: 150px;
+                border-radius: 50%;
+                overflow: hidden;
+                margin: 0 auto 1.5rem;
+                border: 5px solid #e1f0ff;
+                box-shadow: 0 4px 10px rgba(30, 87, 153, 0.2);
+                position: relative;
+                background-color: #f0f8ff;
+            }
+
+            .leader-img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transition: transform 0.5s ease;
+            }
+
+            .leader-card:hover .leader-img {
+                transform: scale(1.05);
+            }
+
+            /* Placeholder for images */
+            .leader-img-placeholder {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+                color: #1e5799;
+                font-size: 3.5rem;
+            }
+
+            .leader-card h3 {
+                color: #1e5799;
+                margin-bottom: 0.5rem;
+                font-size: 1.4rem;
+                min-height: 3rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+            }
+
+            .leader-role {
+                color: #666;
+                font-size: 0.9rem;
+                margin-bottom: 1rem;
+                font-weight: 600;
+            }
+
+            .leader-card button {
+                background: linear-gradient(to right, #1e5799, #207cca);
+                color: white;
+                border: none;
+                padding: 0.8rem 1.8rem;
+                border-radius: 50px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                margin-top: auto;
+                font-size: 1rem;
+                box-shadow: 0 4px 8px rgba(30, 87, 153, 0.3);
+            }
+
+            .leader-card button:hover {
+                background: linear-gradient(to right, #16467e, #1a6ab3);
+                transform: translateY(-2px);
+                box-shadow: 0 6px 12px rgba(30, 87, 153, 0.4);
+            }
+
+            /* Leader Info Modal */
+            .leader-info {
+                display: none;
+                margin-top: 1.2rem;
+                padding: 1rem;
+                background-color: #f8fafe;
+                border-radius: 10px;
+                border-left: 4px solid #1e5799;
+                text-align: left;
+                font-size: 0.95rem;
+                color: #555;
+            }
+
+            .leader-contact {
+                margin-top: 0.5rem;
+                padding-top: 0.5rem;
+                border-top: 1px dashed #ddd;
+                font-size: 0.85rem;
+            }
+
+            .leader-contact i {
+                margin-right: 0.5rem;
+                color: #1e5799;
+            }
+
+            /* Footer */
+            footer {
+                background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+                color: white;
+                padding: 3rem 5% 2rem;
+                margin-top: 4rem;
+            }
+
+            footer > div {
+                max-width: 1400px;
+                margin: 0 auto;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                gap: 3rem;
+            }
+
+            .address h1 {
+                font-size: 1.8rem;
+                margin-bottom: 1.5rem;
+                color: #fff;
+            }
+
+            .address p {
+                margin-bottom: 0.8rem;
+                color: #ddd;
+                max-width: 300px;
+                line-height: 1.8;
+            }
+
+            .links h3 {
+                font-size: 1.5rem;
+                margin-bottom: 1.5rem;
+                color: #fff;
+            }
+
+            .links ul {
+                list-style: none;
+            }
+
+            .links ul li {
+                margin-bottom: 0.8rem;
+            }
+
+            .links ul li a {
+                color: #ddd;
+                text-decoration: none;
+                transition: color 0.3s ease;
+                font-size: 1.1rem;
+            }
+
+            .links ul li a:hover {
+                color: #4dabf7;
+                padding-left: 5px;
+            }
+
+            .copyright {
+                text-align: center;
+                margin-top: 3rem;
+                padding-top: 2rem;
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+                color: #aaa;
+                font-size: 0.9rem;
+                max-width: 1400px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            /* Add Leader Form */
+            .add-leader-form {
+                background: #f8fafe;
+                padding: 2rem;
+                border-radius: 10px;
+                margin-bottom: 2rem;
+                border: 1px solid #e1e5eb;
+                display: none;
+            }
+
+            .form-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .form-group {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .form-group label {
+                margin-bottom: 0.5rem;
+                font-weight: 600;
+                color: #555;
+                font-size: 0.9rem;
+            }
+
+            .form-group input,
+            .form-group textarea,
+            .form-group select {
+                padding: 0.8rem;
+                border: 1px solid #ddd;
+                border-radius: 6px;
+                font-size: 0.95rem;
+                transition: border-color 0.3s;
+            }
+
+            .form-group textarea {
+                min-height: 100px;
+                resize: vertical;
+            }
+
+            .form-group input:focus,
+            .form-group textarea:focus,
+            .form-group select:focus {
+                outline: none;
+                border-color: #1e5799;
+                box-shadow: 0 0 0 3px rgba(30, 87, 153, 0.1);
+            }
+
+            .form-buttons {
+                display: flex;
+                gap: 1rem;
+                justify-content: flex-end;
+            }
+
+            .submit-btn, .cancel-btn {
+                padding: 0.8rem 1.5rem;
+                border: none;
+                border-radius: 6px;
+                cursor: pointer;
+                font-weight: 600;
+                transition: all 0.3s;
+            }
+
+            .submit-btn {
+                background: linear-gradient(to right, #1e5799, #207cca);
+                color: white;
+            }
+
+            .submit-btn:hover {
+                background: linear-gradient(to right, #16467e, #1a6ab3);
+                transform: translateY(-2px);
+            }
+
+            .cancel-btn {
+                background: #6c757d;
+                color: white;
+            }
+
+            .cancel-btn:hover {
+                background: #5a6268;
+                transform: translateY(-2px);
+            }
+
+            /* Status Messages */
+            .status-message {
+                padding: 1rem;
+                border-radius: 8px;
+                margin: 1rem 0;
+                text-align: center;
+                display: none;
+            }
+
+            .status-success {
+                background: #d4edda;
+                color: #155724;
+                border: 1px solid #c3e6cb;
+            }
+
+            .status-error {
+                background: #f8d7da;
+                color: #721c24;
+                border: 1px solid #f5c6cb;
+            }
+
+            /* Server Status */
+            .server-status {
+                text-align: center;
+                margin: 1rem auto;
+                padding: 0.5rem 1rem;
+                border-radius: 20px;
+                font-size: 0.9rem;
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .status-online {
+                background: #d4edda;
+                color: #155724;
+            }
+
+            .status-offline {
+                background: #f8d7da;
+                color: #721c24;
+            }
+
+            /* Responsive Design */
+            @media (max-width: 992px) {
+                .hero h1 {
+                    font-size: 2.2rem;
+                }
+                
+                .leaders {
+                    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+                    gap: 2rem;
+                }
+            }
+
+            @media (max-width: 768px) {
+                .header {
+                    flex-direction: column;
+                    gap: 1rem;
+                    text-align: center;
+                }
+                
+                .header ul {
+                    flex-wrap: wrap;
+                    justify-content: center;
+                    gap: 1rem;
+                }
+                
+                .hero h1 {
+                    font-size: 1.8rem;
+                }
+                
+                .leaders-section-heading {
+                    font-size: 2rem;
+                }
+                
+                footer > div {
+                    flex-direction: column;
+                    gap: 2rem;
+                }
+                
+                .admin-header {
+                    flex-direction: column;
+                    gap: 1rem;
+                    align-items: flex-start;
+                }
+                
+                .admin-controls {
+                    width: 100%;
+                    justify-content: space-between;
+                }
+            }
+
+            @media (max-width: 576px) {
+                .hero {
+                    height: 50vh;
+                }
+                
+                .leaders {
+                    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+                    gap: 1.5rem;
+                }
+                
+                .leader-img-container {
+                    width: 130px;
+                    height: 130px;
+                }
+                
+                .login-content {
+                    padding: 1.5rem;
+                    width: 95%;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <nav>
+            <div class="header">
+                <h1>RAJA MAANIKKAM TEACHERS STREET, SHENBAKKAM</h1>
+                <ul>
+                    <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="contact.html"><i class="fas fa-address-book"></i> Contact</a></li>
+                    <li><a href="donation.html"><i class="fas fa-hand-holding-heart"></i> Donation</a></li>
+                    <li><a href="#" id="adminLoginBtn"><i class="fas fa-user-shield"></i> Admin Login</a></li>
+                    <li id="adminNav" style="display: none;">
+                        <span class="admin-badge">
+                            <i class="fas fa-crown"></i> Admin
+                        </span>
+                    </li>
+                    <li id="logoutNav" style="display: none;">
+                        <button class="logout-btn" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        
+        <!-- Login Modal -->
+        <div class="login-modal" id="loginModal">
+            <div class="login-content">
+                <span class="close-modal" onclick="closeLoginModal()">&times;</span>
+                <h2><i class="fas fa-user-shield"></i> Admin Login</h2>
+                <form class="login-form" id="loginForm">
+                    <input type="email" id="loginEmail" placeholder="Admin Email" required value="admin@community.com">
+                    <input type="password" id="loginPassword" placeholder="Password" required value="admin@2026">
+                    <button type="submit" class="login-btn">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </button>
+                    <div class="login-error" id="loginError">
+                        Invalid email or password
+                    </div>
+                </form>
+                <div class="default-creds">
+                    <p><strong>Default Credentials:</strong></p>
+                    <p>Email: admin@community.com</p>
+                    <p>Password: admin@2026</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="hero">
+            <h1>Welcome To RAJA MAANIKKAM TEACHERS STREET, SHENBAKKAM Community Portal</h1>
+            <div id="serverStatus" class="server-status status-online" style="display: none;">
+                <i class="fas fa-circle"></i> Server Online
+            </div>
+        </div>
+        
+        <!-- Admin Panel -->
+        <div class="admin-panel" id="adminPanel">
+            <div class="admin-header">
+                <h2><i class="fas fa-tachometer-alt"></i> Admin Dashboard</h2>
+                <div class="admin-controls">
+                    <button class="toggle-form-btn" onclick="toggleAddLeaderForm()">
+                        <i class="fas fa-plus"></i> Add New Leader
+                    </button>
+                    <button class="refresh-btn" onclick="loadLeaders()">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Status Messages -->
+            <div class="status-message" id="statusMessage"></div>
+            
+            <!-- Add Leader Form -->
+            <div class="add-leader-form" id="addLeaderForm">
+                <h3><i class="fas fa-user-plus"></i> Add New Community Leader</h3>
+                <form id="leaderForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="leaderName">Full Name *</label>
+                            <input type="text" id="leaderName" name="name" required placeholder="Enter leader's full name">
+                        </div>
+                        <div class="form-group">
+                            <label for="leaderRole">Role/Position *</label>
+                            <input type="text" id="leaderRole" name="role" required placeholder="e.g., Community Head">
+                        </div>
+                        <div class="form-group">
+                            <label for="leaderResponsibilities">Responsibilities *</label>
+                            <textarea id="leaderResponsibilities" name="responsibilities" required placeholder="Describe responsibilities..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="leaderEmail">Email</label>
+                            <input type="email" id="leaderEmail" name="email" placeholder="leader@community.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="leaderPhone">Phone</label>
+                            <input type="tel" id="leaderPhone" name="phone" placeholder="+91 98765 43210">
+                        </div>
+                        <div class="form-group">
+                            <label for="leaderImage">Image URL</label>
+                            <input type="url" id="leaderImage" name="imageurl" placeholder="https://example.com/photo.jpg">
+                            <small style="color: #666; margin-top: 0.3rem;">Leave empty for default icon</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="leaderIcon">Icon Class</label>
+                            <select id="leaderIcon" name="iconclass">
+                                <option value="fa-user">User</option>
+                                <option value="fa-user-tie">Executive</option>
+                                <option value="fa-users">Team</option>
+                                <option value="fa-hands-helping">Support</option>
+                                <option value="fa-graduation-cap">Education</option>
+                                <option value="fa-heartbeat">Health</option>
+                                <option value="fa-female">Women</option>
+                                <option value="fa-child">Youth</option>
+                                <option value="fa-landmark">Culture</option>
+                                <option value="fa-hands">Volunteer</option>
+                                <option value="fa-home">Housing</option>
+                                <option value="fa-utensils">Food</option>
+                                <option value="fa-tree">Environment</option>
+                                <option value="fa-handshake">Mediation</option>
+                                <option value="fa-bullhorn">PR</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="leaderOrder">Display Order</label>
+                            <input type="number" id="leaderOrder" name="order" value="999" min="1">
+                        </div>
+                    </div>
+                    <div class="form-buttons">
+                        <button type="button" class="cancel-btn" onclick="toggleAddLeaderForm()">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                        <button type="submit" class="submit-btn">
+                            <i class="fas fa-save"></i> Save Leader
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Current Leaders Info -->
+            <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                <p><i class="fas fa-info-circle"></i> You are currently viewing <span id="leaderCount">0</span> active community leaders</p>
+            </div>
+        </div>
+        
+        <h1 class="leaders-section-heading">Leaders Who Shape Our Community</h1>
+        
+        <!-- Loading State -->
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Loading community leaders...</p>
+        </div>
+        
+        <!-- Error Message -->
+        <div class="error-message" id="errorMessage" style="display: none;">
+            <h3><i class="fas fa-exclamation-triangle"></i> Unable to Load Data</h3>
+            <p id="errorText"></p>
+            <button onclick="checkServerConnection()">Check Server Connection</button>
+            <button onclick="loadLeaders()" style="background: #1e5799; margin-left: 0.5rem;">Retry</button>
+        </div>
+        
+        <!-- Leaders Container -->
+        <div class="leaders" id="leadersContainer">
+            <!-- Leaders will be dynamically inserted here -->
+        </div>
+        
+        <footer>
+            <div>
+                <div class="address">
+                    <h1>RAJA MAANIKKAM TEACHERS STREET, SHENBAKKAM</h1>
+                    <p><i class="fas fa-map-marker-alt"></i> Ward No. 6</p>
+                    <p>C. Abdul Hakeem Abdullah Sahib Street</p>
+                    <p>Kilvisharam, Tamil Nadu</p>
+                    <p><i class="fas fa-phone"></i> +91 98765 43210</p>
+                    <p><i class="fas fa-envelope"></i> contact@kilvisharamcommunity.org</p>
+                </div>
+                <div class="links">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html"><i class="fas fa-chevron-right"></i> Home</a></li>
+                        <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Contact</a></li>
+                        <li><a href="donation.html"><i class="fas fa-chevron-right"></i> Donation</a></li>
+                        <li><a href="about.html"><i class="fas fa-chevron-right"></i> About Us</a></li>
+                        <li><a href="events.html"><i class="fas fa-chevron-right"></i> Events</a></li>
+                        <li><a href="gallery.html"><i class="fas fa-chevron-right"></i> Gallery</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 Kilvisharam Community Portal. All Rights Reserved. | Designed with <i class="fas fa-heart" style="color:#e74c3c"></i> for the Community</p>
+            </div>
+        </footer>
+        
+        <script>
+            // Configuration
+            const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzMSTXxsXj58EWSaBUlz7sdY3lNwiNHy2sZBETlyOQWbpTZK2y6-j_0UgUcv-4LJVam/exec'; // Replace with your deployed script URL
+            let authToken = localStorage.getItem('adminToken') || null;
+            let isAdmin = localStorage.getItem('isAdmin') === 'true' || false;
+            let isServerOnline = false;
+            
+            // Initialize the page
+            document.addEventListener('DOMContentLoaded', function() {
+                console.log('Page loaded. Checking server connection...');
+                
+                // Check server connection first
+                checkServerConnection();
+                
+                // Check if user is already logged in
+                if (isAdmin && authToken) {
+                    showAdminInterface();
+                }
+                
+                // Load leaders
+                loadLeaders();
+                
+                // Set up event listeners
+                setupEventListeners();
+            });
+            
+            function setupEventListeners() {
+                // Admin login button
+                document.getElementById('adminLoginBtn').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    openLoginModal();
+                });
+                
+                // Login form submission
+                document.getElementById('loginForm').addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    login();
+                });
+                
+                // Leader form submission
+                document.getElementById('leaderForm').addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    addLeader();
+                });
+            }
+            
+            // Server connection check
+            async function checkServerConnection() {
+                const statusElement = document.getElementById('serverStatus');
+                
+                try {
+                    const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=ping&timestamp=${Date.now()}`);
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.success) {
+                            isServerOnline = true;
+                            statusElement.innerHTML = '<i class="fas fa-circle"></i> Server Online';
+                            statusElement.className = 'server-status status-online';
+                            statusElement.style.display = 'inline-flex';
+                            console.log('Server is online:', data);
+                            return true;
+                        }
+                    }
+                } catch (error) {
+                    console.error('Server connection error:', error);
+                }
+                
+                // If we get here, server is offline
+                isServerOnline = false;
+                statusElement.innerHTML = '<i class="fas fa-circle"></i> Server Offline';
+                statusElement.className = 'server-status status-offline';
+                statusElement.style.display = 'inline-flex';
+                return false;
+            }
+            
+            // API Helper Functions
+            async function makeRequest(action, data = {}, method = 'GET') {
+                if (!isServerOnline && !await checkServerConnection()) {
+                    throw new Error('Server is offline. Please check your internet connection and try again.');
+                }
+                
+                const url = new URL(GOOGLE_SCRIPT_URL);
+                
+                if (method === 'GET') {
+                    url.searchParams.append('action', action);
+                    Object.keys(data).forEach(key => {
+                        url.searchParams.append(key, data[key]);
+                    });
+                    
+                    const response = await fetch(url.toString(), {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json'
+                        },
+                        cache: 'no-cache'
+                    });
+                    
+                    return await response.json();
+                } else {
+                    // For POST requests
+                    const postData = {
+                        action: action,
+                        ...data
+                    };
+                    
+                    const response = await fetch(GOOGLE_SCRIPT_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'Accept': 'application/json'
+                        },
+                        body: new URLSearchParams(postData).toString()
+                    });
+                    
+                    return await response.json();
+                }
+            }
+            
+            // Login functions
+            function openLoginModal() {
+                document.getElementById('loginModal').style.display = 'flex';
+                document.getElementById('loginEmail').value = 'admin@community.com';
+                document.getElementById('loginPassword').value = 'admin@2026';
+                document.getElementById('loginError').style.display = 'none';
+            }
+            
+            function closeLoginModal() {
+                document.getElementById('loginModal').style.display = 'none';
+            }
+            
+            async function login() {
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+                const errorElement = document.getElementById('loginError');
+                
+                errorElement.style.display = 'none';
+                
+                try {
+                    const result = await makeRequest('login', { email, password }, 'POST');
+                    
+                    if (result.success) {
+                        authToken = result.token;
+                        isAdmin = true;
+                        
+                        localStorage.setItem('adminToken', authToken);
+                        localStorage.setItem('isAdmin', 'true');
+                        localStorage.setItem('adminUser', JSON.stringify(result.user));
+                        
+                        closeLoginModal();
+                        showAdminInterface();
+                        showStatusMessage('Login successful! Welcome Admin.', 'success');
+                        
+                        // Refresh leaders after login
+                        loadLeaders();
+                    } else {
+                        errorElement.textContent = result.error || 'Invalid credentials';
+                        errorElement.style.display = 'block';
+                    }
+                } catch (error) {
+                    errorElement.textContent = 'Server error. Please try again.';
+                    errorElement.style.display = 'block';
+                    console.error('Login error:', error);
+                }
+            }
+            
+            function logout() {
+                if (confirm('Are you sure you want to logout?')) {
+                    // Call logout API
+                    makeRequest('logout', { token: authToken }, 'POST').catch(console.error);
+                    
+                    localStorage.removeItem('adminToken');
+                    localStorage.removeItem('isAdmin');
+                    localStorage.removeItem('adminUser');
+                    authToken = null;
+                    isAdmin = false;
+                    hideAdminInterface();
+                    showStatusMessage('Logged out successfully.', 'success');
+                }
+            }
+            
+            function showAdminInterface() {
+                document.getElementById('adminNav').style.display = 'block';
+                document.getElementById('logoutNav').style.display = 'block';
+                document.getElementById('adminLoginBtn').style.display = 'none';
+                document.getElementById('adminPanel').style.display = 'block';
+            }
+            
+            function hideAdminInterface() {
+                document.getElementById('adminNav').style.display = 'none';
+                document.getElementById('logoutNav').style.display = 'none';
+                document.getElementById('adminLoginBtn').style.display = 'block';
+                document.getElementById('adminPanel').style.display = 'none';
+                document.getElementById('addLeaderForm').style.display = 'none';
+            }
+            
+            // Leader management functions
+            async function loadLeaders() {
+                const loadingElement = document.getElementById('loading');
+                const container = document.getElementById('leadersContainer');
+                const errorElement = document.getElementById('errorMessage');
+                
+                loadingElement.style.display = 'block';
+                errorElement.style.display = 'none';
+                container.innerHTML = '';
+                
+                try {
+                    const result = await makeRequest('getLeaders');
+                    
+                    if (result.success) {
+                        displayLeaders(result.leaders);
+                        document.getElementById('leaderCount').textContent = result.count || result.leaders.length;
+                        showStatusMessage(`Loaded ${result.count || result.leaders.length} leaders successfully`, 'success');
+                    } else {
+                        displayError(result.error || 'Failed to load leaders');
+                    }
+                } catch (error) {
+                    console.error('Error loading leaders:', error);
+                    displayError(error.message || 'Failed to connect to server');
+                } finally {
+                    loadingElement.style.display = 'none';
+                }
+            }
+            
+            function displayLeaders(leaders) {
+                const container = document.getElementById('leadersContainer');
+                container.innerHTML = '';
+                
+                if (!leaders || leaders.length === 0) {
+                    displayNoLeaders();
+                    return;
+                }
+                
+                leaders.forEach((leader, index) => {
+                    const leaderCard = document.createElement('div');
+                    leaderCard.className = 'leader-card';
+                    leaderCard.id = `leader-${index}`;
+                    
+                    // Get image or icon
+                    const imageUrl = leader.imageurl || '';
+                    const iconClass = leader.iconclass || 'fa-user';
+                    
+                    let imageHtml = '';
+                    if (imageUrl && imageUrl.trim() !== '') {
+                        imageHtml = `<img src="${imageUrl}" alt="${leader.name}" class="leader-img" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\"leader-img-placeholder\"><i class=\"fas ${iconClass}\"></i></div>'">`;
+                    } else {
+                        imageHtml = `<div class="leader-img-placeholder"><i class="fas ${iconClass}"></i></div>`;
+                    }
+                    
+                    // Contact info
+                    let contactHtml = '';
+                    if (leader.email || leader.phone) {
+                        contactHtml = `
+                            <div class="leader-contact">
+                                ${leader.email ? `<div><i class="fas fa-envelope"></i> ${leader.email}</div>` : ''}
+                                ${leader.phone ? `<div><i class="fas fa-phone"></i> ${leader.phone}</div>` : ''}
+                            </div>
+                        `;
+                    }
+                    
+                    leaderCard.innerHTML = `
+                        <div class="leader-img-container">
+                            ${imageHtml}
+                        </div>
+                        <h3>${leader.name || 'Unnamed Leader'}</h3>
+                        <div class="leader-role">${leader.role || 'No Role'}</div>
+                        <button onclick="showLeaderInfo(${index})">Show Info</button>
+                        <div class="leader-info" id="info-${index}">
+                            <p><strong>Role:</strong> ${leader.role || 'Not specified'}</p>
+                            <p><strong>Responsibilities:</strong> ${leader.responsibilities || 'Not specified'}</p>
+                            ${contactHtml}
+                        </div>
+                    `;
+                    
+                    container.appendChild(leaderCard);
+                });
+            }
+            
+            function displayNoLeaders() {
+                const container = document.getElementById('leadersContainer');
+                container.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+                        <i class="fas fa-users" style="font-size: 3rem; color: #ccc; margin-bottom: 1rem;"></i>
+                        <h3 style="color: #666;">No leaders found</h3>
+                        <p>Community leaders will be displayed here.</p>
+                        ${isAdmin ? '<p><button onclick="toggleAddLeaderForm()" style="margin-top: 1rem; padding: 0.5rem 1rem; background: #1e5799; color: white; border: none; border-radius: 4px; cursor: pointer;"><i class="fas fa-plus"></i> Add First Leader</button></p>' : ''}
+                    </div>
+                `;
+            }
+            
+            function displayError(message) {
+                const errorElement = document.getElementById('errorMessage');
+                const errorText = document.getElementById('errorText');
+                errorText.textContent = message;
+                errorElement.style.display = 'block';
+                
+                // Show server URL for debugging
+                console.error('Server URL:', GOOGLE_SCRIPT_URL);
+                console.error('Error details:', message);
+            }
+            
+            async function addLeader() {
+                if (!isAdmin || !authToken) {
+                    showStatusMessage('Please login as admin first.', 'error');
+                    openLoginModal();
+                    return;
+                }
+                
+                const form = document.getElementById('leaderForm');
+                const formData = new FormData(form);
+                const data = Object.fromEntries(formData.entries());
+                
+                // Add token to data
+                data.token = authToken;
+                
+                try {
+                    const result = await makeRequest('addLeader', data, 'POST');
+                    
+                    if (result.success) {
+                        showStatusMessage('Leader added successfully!', 'success');
+                        form.reset();
+                        toggleAddLeaderForm();
+                        loadLeaders();
+                    } else {
+                        showStatusMessage('Error: ' + (result.error || 'Failed to add leader'), 'error');
+                        if (result.error && result.error.includes('Unauthorized')) {
+                            logout();
+                        }
+                    }
+                } catch (error) {
+                    showStatusMessage('Error: ' + error.message, 'error');
+                    console.error('Add leader error:', error);
+                }
+            }
+            
+            function toggleAddLeaderForm() {
+                if (!isAdmin) {
+                    showStatusMessage('Please login as admin first.', 'error');
+                    openLoginModal();
+                    return;
+                }
+                
+                const form = document.getElementById('addLeaderForm');
+                form.style.display = form.style.display === 'block' ? 'none' : 'block';
+                
+                if (form.style.display === 'block') {
+                    document.getElementById('leaderName').focus();
+                }
+            }
+            
+            function showLeaderInfo(leaderIndex) {
+                const infoElement = document.getElementById(`info-${leaderIndex}`);
+                const button = event.target;
+                
+                if (infoElement.style.display === 'block') {
+                    infoElement.style.display = 'none';
+                    button.textContent = 'Show Info';
+                } else {
+                    // Hide all other info elements first
+                    document.querySelectorAll('.leader-info').forEach(el => {
+                        el.style.display = 'none';
+                    });
+                    
+                    // Reset all buttons
+                    document.querySelectorAll('.leader-card button').forEach(btn => {
+                        btn.textContent = 'Show Info';
+                    });
+                    
+                    // Show the selected leader's info
+                    infoElement.style.display = 'block';
+                    button.textContent = 'Hide Info';
+                }
+            }
+            
+            function showStatusMessage(message, type) {
+                const statusElement = document.getElementById('statusMessage');
+                statusElement.textContent = message;
+                statusElement.className = `status-message status-${type}`;
+                statusElement.style.display = 'block';
+                
+                // Auto-hide after 5 seconds
+                setTimeout(() => {
+                    statusElement.style.display = 'none';
+                }, 5000);
+            }
+            
+            // Debug function to check current configuration
+            function debugConfig() {
+                console.log('Current Configuration:');
+                console.log('Server URL:', GOOGLE_SCRIPT_URL);
+                console.log('Is Admin:', isAdmin);
+                console.log('Has Token:', !!authToken);
+                console.log('Server Online:', isServerOnline);
+                console.log('Local Storage:', {
+                    adminToken: localStorage.getItem('adminToken'),
+                    isAdmin: localStorage.getItem('isAdmin'),
+                    adminUser: localStorage.getItem('adminUser')
+                });
+            }
+            
+            // Make debug function available globally
+            window.debugConfig = debugConfig;
+        </script>
+    </body>
+</html>
